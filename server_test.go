@@ -15,7 +15,7 @@ type httpInterface interface {
 	Serve(listener net.Listener) error
 }
 
-// Test that the method signatures of the methods we override from net/http/Server match those of the original.
+// TestInterface tests that the method signatures of the methods we override from net/http/Server match those of the original.
 func TestInterface(t *testing.T) {
 	var original, ours interface{}
 	original = &http.Server{}
@@ -28,7 +28,7 @@ func TestInterface(t *testing.T) {
 	}
 }
 
-// Tests that the server allows in-flight requests to complete
+// TestGracefulness tests that the server allows in-flight requests to complete
 // before shutting down.
 func TestGracefulness(t *testing.T) {
 	server := NewServer()
@@ -64,7 +64,7 @@ func TestGracefulness(t *testing.T) {
 	}
 }
 
-// Tests that starting the server and closing in 2 new, separate goroutines doesnot
+// TestRacyClose tests that starting the server and closing in 2 new, separate goroutines doesnot
 // get flagged by the race detector (need to run 'go test' w/the -race flag)
 func TestRacyClose(t *testing.T) {
 	go func() {
@@ -76,7 +76,7 @@ func TestRacyClose(t *testing.T) {
 	}()
 }
 
-// Tests that the server begins to shut down when told to and does not accept
+// TestShutdown tests that the server begins to shut down when told to and does not accept
 // new requests once shutdown has begun
 func TestShutdown(t *testing.T) {
 	server := NewServer()
@@ -124,7 +124,7 @@ func TestShutdown(t *testing.T) {
 	<-exitchan
 }
 
-// If a request is sent to a closed server via a kept alive connection then
+// TestRequestAfterClose: If a request is sent to a closed server via a kept alive connection then
 // the server closes the connection upon receiving the request.
 func TestRequestAfterClose(t *testing.T) {
 	// Given
@@ -166,7 +166,7 @@ func waitForState(t *testing.T, waiter chan http.ConnState, state http.ConnState
 	}
 }
 
-// Test that a request moving from active->idle->active using an actual
+// TestStateTransitionActiveIdleActive tests that a request moving from active->idle->active using an actual
 // network connection still results in a corect shutdown
 func TestStateTransitionActiveIdleActive(t *testing.T) {
 	server := NewServer()
@@ -203,7 +203,7 @@ func TestStateTransitionActiveIdleActive(t *testing.T) {
 	}
 }
 
-// Test state transitions from new->active->-idle->closed using an actual
+// TestStateTransitionActiveIdleClosed tests state transitions from new->active->-idle->closed using an actual
 // network connection and make sure the waitgroup count is correct at the end.
 func TestStateTransitionActiveIdleClosed(t *testing.T) {
 	var (

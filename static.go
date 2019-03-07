@@ -39,7 +39,7 @@ func Serve(l net.Listener, handler http.Handler) error {
 	return defaultServer.Serve(l)
 }
 
-// Shuts down the default server used by ListenAndServe, ListenAndServeTLS and
+// Close: Shuts down the default server used by ListenAndServe, ListenAndServeTLS and
 // Serve. It returns true if it's the first time Close is called.
 func Close() bool {
 	defaultServerLock.Lock()
